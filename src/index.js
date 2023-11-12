@@ -6,18 +6,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // load ramen menu
     loadRamenMenu();
 
-    // add event listener to handle user submit
+    // add event listener to handle user submit for adding ramen
     document.querySelector("#new-ramen").addEventListener("submit", e => {
         e.preventDefault();
         addNewRamen(e);
     })
+
 });
 
 function loadRamenMenu() {
     // fetch ramen data from API
     fetch("http://localhost:3000/ramens")
         .then(res => res.json())
-        .then(ramens => addRamenPhotosToMenu(ramens));
+        .then(ramens => {
+            addRamenPhotosToMenu(ramens)
+            displayChosenRamen(ramens[0], ramens);
+        });
 }
 
 function addRamenPhotosToMenu(ramens) {
@@ -41,9 +45,8 @@ function addRamenPhotosToMenu(ramens) {
     })
 
     // listen for user to select a specific ramen
-    ramenMenuDiv.addEventListener("click", e => {
-        e.preventDefault();
-        // console.log(e.target.parentElement);
+    document.querySelector("#ramen-menu").addEventListener("click", e => {
+        //console.log(e);
         displayChosenRamen(e.target, ramenArray);
     })
 }
@@ -53,11 +56,11 @@ function displayChosenRamen(chosenRamen, ramens) {
     // use chosenRamen to find corresponding ramen
     const chosenRamenId = Number(chosenRamen.id);
     const chosenRamenObj = ramens.find(ramen => ramen.id === chosenRamenId);
-    console.log(chosenRamenObj);
+    // console.log(chosenRamenObj);
 
     // store chosen ramen div container
     const chosenRamenDiv = document.querySelector("#ramen-detail");
-    // console.log(chosenRamenDiv.children);
+    console.log(chosenRamenDiv.children);
     // assign image
     chosenRamenDiv.children[0].src = chosenRamenObj.image;
     // assign name
